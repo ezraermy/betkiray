@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %} choice {% endblock %}
+{% block content %}
+    
+    <div id="goforapp">
+        {% if gofor %}
+        <div class="table">
+            <table class="table is-fullwidth is-striped">
+                <thead>
+                   <th>Property</th>
+                   <th>Price/month</th>
+                   <th>K/ketema</th>
+                   <th>Phone</th>
+                   <td></td>
+                </thead>
+                <tbody>
+                    <tr v-for="akeray in akerays">
+                        <td><a :href="akeray.url">[[ akeray.title ]]</a></td>
+                        <td>[[ akeray.price ]]</td>
+                        <td>[[ akeray.subcity ]]</td>
+                        <td>[[ akeray.phone ]]</td>
+                        <td><button @click="removeFromGofor(akeray.id)" class="button is-danger">delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        {% else %}
+            <div class="notification is-danger">
+                <p>Your choice is empty</p>
+            </div>
+        {% endif %}
+        
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var goforapp = new Vue({
+            el: ('#goforapp'),
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    akerays: [{{ akeraysstring|safe }}]
+                }
+            },
+            mounted() {
+                console.log(this.akerays)
+            },
+            methods: {
+                removeFromGofor(akeray_id) {  
+
+                    console.log('akeray_id:', akeray_id)
+
+                    var data = {'akeray_id': akeray_id}
+    
+                    fetch('/remove_from_gofor/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(data)
+                    })
+                    .then((response) => {
+                        console.log(response)
+                        this.akerays = this.akerays.filter(akeray => akeray.id != akeray_id)
+    
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+                }
+            }
+        })
+    </script>
+{% endblock %}

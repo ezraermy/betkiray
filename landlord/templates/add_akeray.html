@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %} add | {% endblock %}
+{% block content %}
+        
+    {% if request.user.is_authenticated %} 
+        <div class="columns">
+            <div class="column is-6 is-offset-3">
+                <form method="post" enctype="multipart/form-data" action=".">
+
+                    {% csrf_token %}
+        
+                    <input type="hidden" name="next" value="{{ next }}">
+        
+                    <div class="field">
+                        <label>House Type</label>
+                        <div class="control">
+                            <input type="text" class="input" name="title" id="id_title" placeholder="e.g., apartment, condominum, villa or one room rentals, etc..">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>City</label>
+                        <div class="control">
+                            <input type="text" class="input" name="location" id="id_location">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>K/ketema</label>
+                        <div class="control">
+                            <input type="text" class="input" name="subcity" id="id_subcity">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Kebele</label>
+                        <div class="control">
+                            <input type="text" class="input" name="kebele" id="id_kebele">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Price/month</label>
+                        <div class="control">
+                            <input type="number" class="number" name="price" id="id_price">
+                        </div>
+                    </div>
+                    <div class="control">
+                        <label>Description</label>       
+                            <textarea name="summary" id="id_summary" class="textarea" cols="30" rows="10" 
+                            placeholder="e.g., Number of bed room, room size, 
+        includes electricity and water, 
+        room floor with ceramic tile, 
+        include wifi, etc.."></textarea>       
+                    </div>
+                    <div class="field">
+                        <label>Contact</label>
+                        <div class="control">
+                            <input type="text" class="input" name="phone" id="id_title" placeholder="phone number">
+                        </div>
+                    </div>
+                    
+                    {% if form.erros %}
+                        <div class="notification is-danger">
+                            <p>Something went worng!</p>
+                        </div>
+                    {% endif %}
+        
+                    <p style="font-size: 12px">Choose multiple pictures</p>
+                    {{ imageform.management_form }}
+                    {% for form in imageform %}
+                        {{ form }}
+                    {% endfor %} 
+                    <input type="submit" name="submit" value="Post for Rent" class="button is-success" />
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <a href="{% url 'login' %}">login</a>or <a href="{% url 'signup' %}">signup</a>
+    {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var addakerayapp = new Vue({
+            el: ('#addakerayapp'),
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    title: '',
+                    location: '',
+                    subcity: '',
+                    kebele: '',
+                    price: '',
+                    summary: '',
+                    phone: '' ,
+                    date_added: 'Now'        
+                }
+            },
+            methods: {
+                submitForm() {
+                    console.log('submit')
+
+                    const data = {
+                        'title': this.title,
+                        'location': this.location,
+                        'subcity': this.subcity,
+                        'kebele': this.kebele,
+                        'price': this.price,
+                        'summary': this.summary,
+                        'phone': this.phone,
+                        'date_added': this.date_added
+                    }
+    
+                    fetch('/add_new_rent/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then((response) => {
+                        console.log(response)
+                        
+    
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+                }
+            }
+
+        })
+    </script>
+{% endblock %}

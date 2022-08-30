@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %} about | {% endblock %}
+{% block content %}
+<h1 class="title">Search</h1>
+<h2 class="subtitle">Search term: "{{query}}"</h2>
+    <div class="columns is-multiline">
+       
+        {% for akeray in akerays %}
+            <div class="column is-4">
+                <div class="card">
+                    <div class="card-image">
+                        <figure class="image">
+                            <img src="{{ akeray.image.url }}">
+                        </figure>
+                    </div>
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-content">
+                                <h2 class="subtitle"><strong>Room type: </strong>{{ akeray.title }}</h2>
+                                <p><strong>Price: </strong>{{ akeray.price }} birr/month</p>
+                                <p class="info"><strong>Date Uploaded:</strong> {{ akeray.date_added|timesince }} a go</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <footer class="card-footer">
+                        <a href="{% url 'akeray_detail' akeray.id %}" class="card-footer-item">View</a>
+                       
+                        <div class="control">
+                            <a href="{% url 'delete' akeray.id %}" class="button">X</a>
+                        </div>
+                        
+                        {% if request.user.is_authenticated %}
+                        <div class="control">
+                            <a href="{% url 'update' akeray.id %}" class="button">Edit</a>
+                        </div>
+                        {% endif %}
+                    </footer>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+   
+{% endblock %}

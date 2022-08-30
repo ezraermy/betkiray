@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %} add | {% endblock %}
+{% block content %}
+    <h1 class="title">New</h1>
+    <div id="addakerayapp" class="navbar-item">
+            <form action="." method="post">
+                {% csrf_token %}
+                <div class="field has-addons">
+                    <label>Title</label>
+                    <div class="control">
+                        <input type="text" class="input" v-model="title">
+                    </div>
+                </div>   
+                <div class="field has-addons">
+                    <label>Location</label>
+                    <div class="control">
+                        <input type="text" class="input" v-model="location">
+                    </div>
+                </div>   
+                <div class="field has-addons">
+                    <label>Price</label>
+                    <div class="control">
+                        <input type="number" class="input" v-model="price">
+                    </div>
+                </div>   
+                <div class="field has-addons">
+                    <label>Summary</label>
+                    <div class="control">
+                        <textarea cols="30" rows="10" v-model="summary"></textarea>
+                    </div>  
+                </div>
+                <div class="field has-addons">
+                    <label>Phone</label>
+                    <div class="control">
+                        <input type="number" class="input" v-model="phone">
+                    </div>  
+                </div>
+                
+                <div class="field has-addons">
+                    <button class="button is-success">Add</button>
+                </div>
+            </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var addakerayapp = new Vue({
+            el: ('#addakerayapp'),
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    title: '',
+                    location: '',
+                    price: '',
+                    summary: '',
+                    phone: ''
+
+                }
+            }
+        })
+    </script>
+{% endblock %}

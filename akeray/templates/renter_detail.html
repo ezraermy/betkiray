@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="title">{{renter.name}}</h1>
+<h2 class="subtitle">{{renter.location}}</h1>
+<h2 class="subtitle">{{renter.contact}}</h1>
+{% if renter.status %}
+    <p>{{ renter.status }}</p>
+{% endif %}
+
+
+{% endblock %}

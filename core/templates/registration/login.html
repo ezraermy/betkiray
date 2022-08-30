@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %} login {% endblock %}
+{% block content %}
+        <div class="columns">
+            <div class="column is-4 is-offset-4">
+                <h1 class="title">Login</h1>
+                <form action="." method="post">
+                    {% csrf_token %}
+        
+                    <input type="hidden" name="next" value="{{ next }}">
+        
+                    <div class="field">
+                        <label>Username</label>
+                        <div class="control">
+                            <input type="text" class="input" name="username" id="id_username">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Password</label>
+                        <div class="control">
+                            <input type="password" class="input" name="password" id="id_password">
+                        </div>
+                    </div>
+        
+                    {% if form.errors %}
+                        <div class="notification is-danger">
+                            <p>You have entered an invalid username or password! Please try again.</p>
+                        </div>
+                    {% endif %}
+                 
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-success">Login</button>
+                        </div>
+                    </div>
+                    <br>
+                    <p>Don't have an account? <a href="{% url 'signup' %}">Signup</a></p>
+                </form>
+            </div>
+        </div>
+        
+{% endblock %}

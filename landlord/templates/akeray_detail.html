@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %} {{ akeray.title }} | {% endblock %}
+{% block content %}
+    {% if request.user.is_authenticated %}
+       <div id="akerayapp">
+            <img :src="mainImage">
+            <br>
+            <div class="columns">
+                <div class="column is-2" v-for="image in images">
+                    <figure class="image is-128x128">
+                        <img :src="image.image" @click="changeMainImage(image.image)">
+                    </figure>
+                </div>
+            </div>
+            <h1 class="title">{{ akeray.title }}</h1>
+            <h2 class="subtitle">{{ akeray.price }} birr/month</h2>
+            <p><strong>City: </strong>{{ akeray.location }}</p>
+            <p><strong>K/ketema: </strong>{{ akeray.subcity }}</p>
+            <p><strong>Kebele: </strong>{{ akeray.kebele }}</p>
+            <p><strong>More info: </strong>{{ akeray.summary }}</p>
+            <p><strong><i class="fas fa-phone"></i></strong> {{ akeray.phone }}</p>
+                                    
+            <br>
+            <button @click="addToGofor({{akeray.id}})" class="button is-success">Save to Favourites</button>
+       </div>
+    {% else %}
+       <div class="field">
+        <div class="control">
+            <center class="center"><p>You need to <a href="{% url 'login' %}">Login</a> Or <a href="{% url 'signup' %}">Signup</a> to proceed</p></center>
+        </div>
+       </div>
+    {% endif %}
+    
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var akerayapp = new Vue({
+        el: ('#akerayapp'),
+        delimiters: ['[[', ']]'],
+        data() {
+            return {
+                mainImage: '{{ akeray.image.url }}',
+                images: [{{ imagesstring|safe }}]
+            }
+        },
+        methods: {
+            changeMainImage(image) {
+                this.mainImage = image;
+            },
+            addToGofor(akeray_id) {
+                console.log('akeray_id:', akeray_id)
+                alert('Check your favourite to see your saves!')
+
+                var data = {'akeray_id': akeray_id, 'update': false, 'quantity': 1}
+
+                fetch('/add_to_gofor/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    console.log(response)
+
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+            }
+        }
+    })
+</script>
+{% endblock %}
